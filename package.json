@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "fs-extra": "^8.0.1"
+  },
+  "devDependencies": {
+    "mri": "^1.1.4"
+  }
+}
