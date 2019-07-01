@@ -6,11 +6,8 @@ const componentsPath = path.join(__dirname, '../components')
 const componentsDir = fs.readdirSync(componentsPath)
 
 componentsDir.forEach(component => {
-  logReport[component] = {}
-
   const script = new Script({
-    component,
-    logReport
+    component
   })
 
   script.run()
