@@ -50,20 +50,29 @@ module.exports = class Script {
     this.runCommand('npx', 'vue-sfc-cli', ...args)
   }
 
+  ytb(...args) {
+    this.runCommand('yarn', '--registry', 'https://registry.npm.taobao.org', ...args)
+  }
+
   run() {
     const branchName = `chore/up-to-date-with-cli-${(Math.random() * 100).toFixed()}`
+    const addGrenToPkg = require('./scripts/add-gren-to-pkg')
 
     this.git('checkout', 'dev')
     this.git('branch', branchName, '-f')
     this.git('checkout', branchName)
-    this.git('fetch', 'upstream')
-    this.git('merge', 'upstream/dev')
-    this.cli('--upgrade', '--files', (args.get('files') || ''), '--npm', this.component, '--owner', 'FEMessage')
-    this.git('commit', '-am', 'chore: up-to-date with cli')
-    this.git('push', '-u', 'origin', branchName)
+    this.ytb()
+    this.ytb('remove', 'github-release-notes')
+    this.ytb('add', '@femessage/github-release-notes', '-D')
+
+    addGrenToPkg(this)
+
+    this.git('pull', 'origin', 'dev')
+    this.git('commit', '-am', 'chore(deps): up-to-date with gren')
+    this.git('push', '-u', 'evillt-works', branchName)
 
     if (args.has('pr')) {
-      this.hub('pull-request', '-m', 'chore: use vue-sfc-cli upgrade', '-b', 'femessage:dev')
+      this.hub('pull-request', '-m', 'chore: upgrade gren', '-b', 'femessage:dev')
     }
 
     // log report
